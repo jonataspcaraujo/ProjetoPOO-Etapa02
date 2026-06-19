@@ -1,84 +1,131 @@
-public class Profissional {
-    public String nome;
+import java.util.ArrayList;
+
+public abstract class Profissional extends Pessoa {
+
     public String especialidade;
     public String registroProfissional;
     public double valorConsulta;
-    public String[] diasDisponiveis;
-    public int totalDias;
+    public ArrayList<String> diasDisponiveis;
 
-    // so nome e especialidade
+    // SOBRECARGA: mesmo nome, parametros diferentes (resolvido em tempo de compilacao)
     public Profissional(String nome, String especialidade) {
-        this.nome = nome;
+
+        super(nome, "", "", "");
+
         this.especialidade = especialidade;
         this.registroProfissional = "";
         this.valorConsulta = 0;
-        this.diasDisponiveis = new String[7];
-        this.totalDias = 0;
+        this.diasDisponiveis = new ArrayList<String>();
+
     }
 
-    public Profissional(String nome, String especialidade, String registroProfissional, double valorConsulta) {
-        this.nome = nome;
+    public Profissional(String nome, String especialidade,
+                        String registroProfissional, double valorConsulta) {
+
+        super(nome, "", "", "");
+
         this.especialidade = especialidade;
         this.registroProfissional = registroProfissional;
         this.valorConsulta = valorConsulta;
-        this.diasDisponiveis = new String[7];
-        this.totalDias = 0;
+        this.diasDisponiveis = new ArrayList<String>();
+
     }
 
-    // construtor completo com dias
-    public Profissional(String nome, String especialidade, String registroProfissional,
-                        double valorConsulta, String[] dias, int totalDias) {
-        this.nome = nome;
+    public Profissional(String nome, String especialidade,
+                        String registroProfissional,
+                        double valorConsulta,
+                        ArrayList<String> dias) {
+
+        super(nome, "", "", "");
+
         this.especialidade = especialidade;
         this.registroProfissional = registroProfissional;
         this.valorConsulta = valorConsulta;
-        this.diasDisponiveis = new String[7];
-        this.totalDias = totalDias;
-        for (int i = 0; i < totalDias; i++) {
-            this.diasDisponiveis[i] = dias[i];
+        this.diasDisponiveis = new ArrayList<String>();
+
+        for (String dia : dias) {
+            this.diasDisponiveis.add(dia);
         }
+
     }
 
+    // SOBRECARGA: mesmo nome, parametros diferentes (resolvido em tempo de compilacao)
     public void atualizar(String registro, double valor) {
+
         this.registroProfissional = registro;
         this.valorConsulta = valor;
+
     }
 
-    public void atualizar(String registro, double valor, String[] dias, int totalDias) {
+    public String getEspecialidade() {
+        return especialidade;
+    }
+
+    public void atualizar(String registro, double valor,
+                          ArrayList<String> dias) {
+
         this.registroProfissional = registro;
         this.valorConsulta = valor;
-        this.totalDias = totalDias;
-        for (int i = 0; i < totalDias; i++) {
-            this.diasDisponiveis[i] = dias[i];
+
+        this.diasDisponiveis.clear();
+
+        for (String dia : dias) {
+            this.diasDisponiveis.add(dia);
         }
+
     }
 
-    // verifica se o profissional atende naquele dia
     public boolean atendeNoDia(String dia) {
-        for (int i = 0; i < totalDias; i++) {
-            if (diasDisponiveis[i].equals(dia)) {
+
+        for (String diaDisponivel : diasDisponiveis) {
+
+            if (diaDisponivel.equals(dia)) {
                 return true;
             }
+
         }
+
         return false;
+
     }
 
-    // valida as especialidades aceitas pela clinica
     public static boolean especialidadeValida(String esp) {
+
         if (esp.equals("clinica geral")) return true;
         if (esp.equals("fisioterapia")) return true;
         if (esp.equals("psicologia")) return true;
         if (esp.equals("nutricao")) return true;
+
         return false;
+
     }
 
-    public String exibirResumo() {
+    // SOBRESCRITA: mesmo nome e parametros, classe filha redefine comportamento (resolvido em tempo de execucao)
+    @Override
+    public void exibirResumo() {
+
         String dias = "";
-        for (int i = 0; i < totalDias; i++) {
-            if (i > 0) dias = dias + ", ";
-            dias = dias + diasDisponiveis[i];
+
+        for (int i = 0; i < diasDisponiveis.size(); i++) {
+
+            if (i > 0) {
+                dias += ", ";
+            }
+
+            dias += diasDisponiveis.get(i);
+
         }
-        return "Nome: " + nome + " | Espec: " + especialidade + " | Reg: " + registroProfissional
-                + " | Valor: R$" + valorConsulta + " | Dias: " + dias;
+
+        System.out.println(
+            "Nome: " + getNome() +
+            " | Espec: " + especialidade +
+            " | Reg: " + registroProfissional +
+            " | Valor: R$" + valorConsulta +
+            " | Dias: " + dias
+        );
+
     }
+
+    public abstract void registrarEspecifico();
+
 }
