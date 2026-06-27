@@ -1,13 +1,14 @@
+import java.util.List;
+
 public class Relatorio {
 
     // mostra todas as consultas
-    public static void gerarRelatorio(Consulta[] consultas, int totalConsultas,
-                                      Atendimento[] atendimentos, int totalAtendimentos) {
+    public static void gerarRelatorio(List<Consulta> consultas, int totalConsultas,
+                                      List<Atendimento> atendimentos, int totalAtendimentos) {
         System.out.println("\n=== RELATORIO GERAL ===");
         for (int i = 0; i < totalConsultas; i++) {
-            System.out.println(consultas[i].exibirResumo());
-            // verifica se tem diagnostico
-            String diag = buscarDiagnostico(i, atendimentos, totalAtendimentos);
+            System.out.println(consultas.get(i).exibirResumo());
+            String diag = buscarDiagnostico(i, consultas, atendimentos, totalAtendimentos);
             if (!diag.equals("")) {
                 System.out.println("  Diagnostico: " + diag);
             }
@@ -16,15 +17,15 @@ public class Relatorio {
     }
 
     // filtra por profissional
-    public static void gerarRelatorio(Consulta[] consultas, int totalConsultas,
-                                      Atendimento[] atendimentos, int totalAtendimentos,
+    public static void gerarRelatorio(List<Consulta> consultas, int totalConsultas,
+                                      List<Atendimento> atendimentos, int totalAtendimentos,
                                       String nomeProfissional) {
         System.out.println("\n=== RELATORIO - " + nomeProfissional + " ===");
         boolean achou = false;
         for (int i = 0; i < totalConsultas; i++) {
-            if (consultas[i].nomeProfissional.equals(nomeProfissional)) {
-                System.out.println(consultas[i].exibirResumo());
-                String diag = buscarDiagnostico(i, atendimentos, totalAtendimentos);
+            if (consultas.get(i).getNomeProfissional().equals(nomeProfissional)) {
+                System.out.println(consultas.get(i).exibirResumo());
+                String diag = buscarDiagnostico(i, consultas, atendimentos, totalAtendimentos);
                 if (!diag.equals("")) {
                     System.out.println("  Diagnostico: " + diag);
                 }
@@ -38,14 +39,14 @@ public class Relatorio {
     }
 
     // filtra por periodo (data inicio e fim)
-    public static void gerarRelatorio(Consulta[] consultas, int totalConsultas,
-                                      Atendimento[] atendimentos, int totalAtendimentos,
+    public static void gerarRelatorio(List<Consulta> consultas, int totalConsultas,
+                                      List<Atendimento> atendimentos, int totalAtendimentos,
                                       String dataInicio, String dataFim) {
         System.out.println("\n=== RELATORIO - " + dataInicio + " a " + dataFim + " ===");
         for (int i = 0; i < totalConsultas; i++) {
-            if (estaNoIntervalo(consultas[i].data, dataInicio, dataFim)) {
-                System.out.println(consultas[i].exibirResumo());
-                String diag = buscarDiagnostico(i, atendimentos, totalAtendimentos);
+            if (estaNoIntervalo(consultas.get(i).getData(), dataInicio, dataFim)) {
+                System.out.println(consultas.get(i).exibirResumo());
+                String diag = buscarDiagnostico(i, consultas, atendimentos, totalAtendimentos);
                 if (!diag.equals("")) {
                     System.out.println("  Diagnostico: " + diag);
                 }
@@ -54,26 +55,26 @@ public class Relatorio {
         }
     }
 
-    // resumo financeiro do dia
-    public static void gerarResumoFinanceiro(Consulta[] consultas, int totalConsultas,
-                                             Pagamento[] pagamentos, int totalPagamentos,
-                                             double[] multas, int totalMultas) {
+    // resumo financeiro
+    public static void gerarResumoFinanceiro(List<Consulta> consultas, int totalConsultas,
+                                             List<Pagamento> pagamentos, int totalPagamentos,
+                                             List<Double> multas, int totalMultas) {
         int realizadas = 0;
         int canceladas = 0;
         double totalFaturado = 0;
         double totalEmMultas = 0;
 
-        for (int i = 0; i < totalConsultas; i++) {
-            if (consultas[i].status.equals("realizada")) realizadas++;
-            if (consultas[i].status.equals("cancelada")) canceladas++;
+        for (Consulta consulta : consultas) {
+            if (consulta.getStatus().equals("Realizada")) realizadas++;
+            if (consulta.getStatus().equals("Cancelada")) canceladas++;
         }
 
-        for (int i = 0; i < totalPagamentos; i++) {
-            totalFaturado = totalFaturado + pagamentos[i].valorFinal;
+        for (Pagamento pagamento : pagamentos) {
+            totalFaturado = totalFaturado + pagamento.getValorFinal();
         }
 
-        for (int i = 0; i < totalMultas; i++) {
-            totalEmMultas = totalEmMultas + multas[i];
+        for (Double multa : multas) {
+            totalEmMultas = totalEmMultas + multa;
         }
 
         System.out.println("\n=== RESUMO FINANCEIRO ===");
@@ -83,11 +84,12 @@ public class Relatorio {
         System.out.println("Total em multas: R$" + Math.round(totalEmMultas * 100.0) / 100.0);
     }
 
-    // busca diagnostico de um atendimento pelo indice da consulta
-    public static String buscarDiagnostico(int indiceConsulta, Atendimento[] atendimentos, int total) {
+    // busca diagnostico de um atendimento pelo indice da consulta — assinatura corrigida
+    public static String buscarDiagnostico(int indiceConsulta, List<Consulta> consultas,
+                                           List<Atendimento> atendimentos, int total) {
         for (int i = 0; i < total; i++) {
-            if (atendimentos[i].indiceConsulta == indiceConsulta) {
-                return atendimentos[i].diagnostico;
+            if (atendimentos.get(i).getConsulta() == consultas.get(indiceConsulta)) {
+                return atendimentos.get(i).getProntuario().getDiagnosticoDoPaciente();
             }
         }
         return "";
@@ -107,5 +109,13 @@ public class Relatorio {
         int mes = Integer.parseInt(data.substring(3, 5));
         int ano = Integer.parseInt(data.substring(6, 10));
         return ano * 10000 + mes * 100 + dia;
+    }
+
+    public static void relatorioUnificado(List<Pessoa> todasAsPessoas) {
+        System.out.println("\n=== RELATORIO UNIFICADO DE PESSOAS ===");
+        for (Pessoa pessoa : todasAsPessoas) {
+            System.out.println(pessoa.exibirResumo());
+        }
+
     }
 }

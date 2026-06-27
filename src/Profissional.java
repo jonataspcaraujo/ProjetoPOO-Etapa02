@@ -1,41 +1,39 @@
-public class Profissional {
-    public String nome;
-    public String especialidade;
-    public String registroProfissional;
-    public double valorConsulta;
-    public String[] diasDisponiveis;
-    public int totalDias;
+import java.util.ArrayList;
+import java.util.List;
 
-    // so nome e especialidade
-    public Profissional(String nome, String especialidade) {
-        this.nome = nome;
+
+public class Profissional extends Pessoa {
+    private String especialidade;
+    private String registroProfissional;
+    private double valorConsulta;
+    // AGREGAÇÃO: Profissional possui horários, mas horários sobrevivem sem o profissional
+    private List<HorarioDisponivel> horariosDisponiveis = new ArrayList<>();
+
+    
+    public Profissional(String nome, String cpf, String telefone, int idade, String especialidade) {
+        super(nome, cpf, telefone, idade); // Chama o construtor da classe Pessoa
         this.especialidade = especialidade;
         this.registroProfissional = "";
         this.valorConsulta = 0;
-        this.diasDisponiveis = new String[7];
-        this.totalDias = 0;
+        this.horariosDisponiveis = new ArrayList<>();
     }
 
-    public Profissional(String nome, String especialidade, String registroProfissional, double valorConsulta) {
-        this.nome = nome;
+    public Profissional(String nome, String cpf, String telefone, int idade, 
+                        String especialidade, String registroProfissional,
+                        double valorConsulta, List<HorarioDisponivel> horarios) {
+        super(nome, cpf, telefone, idade);
         this.especialidade = especialidade;
         this.registroProfissional = registroProfissional;
         this.valorConsulta = valorConsulta;
-        this.diasDisponiveis = new String[7];
-        this.totalDias = 0;
-    }
+        this.horariosDisponiveis = new ArrayList<>();
+        if (horarios != null) {
+            this.horariosDisponiveis.addAll(horarios);
+        }
+        }
 
-    // construtor completo com dias
-    public Profissional(String nome, String especialidade, String registroProfissional,
-                        double valorConsulta, String[] dias, int totalDias) {
-        this.nome = nome;
-        this.especialidade = especialidade;
-        this.registroProfissional = registroProfissional;
-        this.valorConsulta = valorConsulta;
-        this.diasDisponiveis = new String[7];
-        this.totalDias = totalDias;
-        for (int i = 0; i < totalDias; i++) {
-            this.diasDisponiveis[i] = dias[i];
+    public void adicionarHorario(HorarioDisponivel horario) {
+        if (horario != null) {
+            this.horariosDisponiveis.add(horario);
         }
     }
 
@@ -44,26 +42,36 @@ public class Profissional {
         this.valorConsulta = valor;
     }
 
-    public void atualizar(String registro, double valor, String[] dias, int totalDias) {
+    public void atualizar(String registro, double valor, List<HorarioDisponivel> horarios) {
         this.registroProfissional = registro;
         this.valorConsulta = valor;
-        this.totalDias = totalDias;
-        for (int i = 0; i < totalDias; i++) {
-            this.diasDisponiveis[i] = dias[i];
+        this.horariosDisponiveis = new ArrayList<>();
+        if (horarios != null) {
+            this.horariosDisponiveis.addAll(horarios);
         }
-    }
+        }
 
-    // verifica se o profissional atende naquele dia
+
+    
     public boolean atendeNoDia(String dia) {
-        for (int i = 0; i < totalDias; i++) {
-            if (diasDisponiveis[i].equals(dia)) {
+        for (HorarioDisponivel h : horariosDisponiveis) {
+            if (h.getDiaSemana().equals(dia)) {
                 return true;
             }
         }
         return false;
     }
 
-    // valida as especialidades aceitas pela clinica
+    public boolean atendeNoHorario(String dia, String turno) {
+        if (dia == null || turno == null) return false;
+        for (HorarioDisponivel h : horariosDisponiveis) {
+            if (h.getDiaSemana().equals(dia) && h.getTurno().equals(turno)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     public static boolean especialidadeValida(String esp) {
         if (esp.equals("clinica geral")) return true;
         if (esp.equals("fisioterapia")) return true;
@@ -72,13 +80,46 @@ public class Profissional {
         return false;
     }
 
+    // SOBRESCRITA
+    @Override
     public String exibirResumo() {
-        String dias = "";
-        for (int i = 0; i < totalDias; i++) {
-            if (i > 0) dias = dias + ", ";
-            dias = dias + diasDisponiveis[i];
-        }
-        return "Nome: " + nome + " | Espec: " + especialidade + " | Reg: " + registroProfissional
-                + " | Valor: R$" + valorConsulta + " | Dias: " + dias;
+        return "Nome: " + getNome() + " | Espec: " + especialidade + " | Reg: " + registroProfissional
+                + " | Valor: R$" + valorConsulta + " | Horários: " + horariosDisponiveis.toString();
     }
+
+    
+    public void registrarEspecifico(Atendimento atendimento) {
+        // Vazio na classe base
+    }
+
+    
+
+    public String getEspecialidade() {
+        return especialidade;
+    }
+
+    public void setEspecialidade(String especialidade) {
+        this.especialidade = especialidade;
+    }
+
+    public String getRegistroProfissional() {
+        return registroProfissional;
+    }
+
+    public void setRegistroProfissional(String registroProfissional) {
+        this.registroProfissional = registroProfissional;
+    }
+
+    public double getValorConsulta() {
+        return valorConsulta;
+    }
+
+    public void setValorConsulta(double valorConsulta) {
+        this.valorConsulta = valorConsulta;
+    }
+
+    public List<HorarioDisponivel> getHorariosDisponiveis() { 
+        return horariosDisponiveis; 
+    }
+
 }
