@@ -1,84 +1,164 @@
-public class Profissional {
-    public String nome;
-    public String especialidade;
-    public String registroProfissional;
-    public double valorConsulta;
-    public String[] diasDisponiveis;
-    public int totalDias;
+import java.util.ArrayList;
+import java.util.List;
 
-    // so nome e especialidade
-    public Profissional(String nome, String especialidade) {
-        this.nome = nome;
-        this.especialidade = especialidade;
-        this.registroProfissional = "";
-        this.valorConsulta = 0;
-        this.diasDisponiveis = new String[7];
-        this.totalDias = 0;
-    }
+// R6: classe abstrata - não instanciar diretamente
+public abstract class Profissional extends Pessoa {
+
+    // R1: atributos privados (antes eram public)
+    private String especialidade;
+    private String registroProfissional;
+    private double valorConsulta;
+    private List<HorarioDisponivel> horarios;
 
     public Profissional(String nome, String especialidade, String registroProfissional, double valorConsulta) {
-        this.nome = nome;
+        super(nome);
         this.especialidade = especialidade;
         this.registroProfissional = registroProfissional;
         this.valorConsulta = valorConsulta;
-        this.diasDisponiveis = new String[7];
-        this.totalDias = 0;
+        this.horarios = new ArrayList<>();
     }
 
-    // construtor completo com dias
-    public Profissional(String nome, String especialidade, String registroProfissional,
-                        double valorConsulta, String[] dias, int totalDias) {
-        this.nome = nome;
-        this.especialidade = especialidade;
-        this.registroProfissional = registroProfissional;
-        this.valorConsulta = valorConsulta;
-        this.diasDisponiveis = new String[7];
-        this.totalDias = totalDias;
-        for (int i = 0; i < totalDias; i++) {
-            this.diasDisponiveis[i] = dias[i];
+    // R1: getters
+    public String getEspecialidade() { return especialidade; }
+    public String getRegistroProfissional() { return registroProfissional; }
+    public double getValorConsulta() { return valorConsulta; }
+    public List<HorarioDisponivel> getHorarios() { return horarios; }
+
+    // R1: setter com validação
+    public void setValorConsulta(double valor) {
+        if (valor < 0) {
+            throw new IllegalArgumentException("Valor da consulta não pode ser negativo.");
         }
+        this.valorConsulta = valor;
     }
 
+    // SOBRECARGA de atualizar (R4)
     public void atualizar(String registro, double valor) {
-        this.registroProfissional = registro;
-        this.valorConsulta = valor;
-    }
-
-    public void atualizar(String registro, double valor, String[] dias, int totalDias) {
-        this.registroProfissional = registro;
-        this.valorConsulta = valor;
-        this.totalDias = totalDias;
-        for (int i = 0; i < totalDias; i++) {
-            this.diasDisponiveis[i] = dias[i];
+        if (validarRegistro(registro)) {
+            this.registroProfissional = registro;
+            setValorConsulta(valor);
         }
     }
 
-    // verifica se o profissional atende naquele dia
+    public void atualizar(String registro, double valor, List<HorarioDisponivel> novosHorarios) {
+        if (validarRegistro(registro)) {
+            this.registroProfissional = registro;
+            setValorConsulta(valor);
+            this.horarios = novosHorarios;
+        }
+    }
+
     public boolean atendeNoDia(String dia) {
-        for (int i = 0; i < totalDias; i++) {
-            if (diasDisponiveis[i].equals(dia)) {
-                return true;
+        for (HorarioDisponivel horario : horarios) {
+            if (horario.getDiaSemana().equalsIgnoreCase(dia)) return true;
+        }
+        return false;
+    }
+
+    public void adicionarHorario(HorarioDisponivel horario) {
+        if (horario != null && !horarios.contains(horario)) horarios.add(horario);
+    }
+
+    public boolean removerHorario(HorarioDisponivel horario) {
+        return horarios.remove(horario);
+    }
+
+    public void listarHorarios() {
+        if (horarios.isEmpty()) {
+            System.out.println("Nenhum horário disponível cadastrado.");
+            return;
+        }
+        for (HorarioDisponivel horario : horarios) System.out.println("- " + horario);
+    }
+
+    public List<HorarioDisponivel> buscarHorariosAlternativos(HorarioDisponivel horarioConflitante) {
+        List<HorarioDisponivel> alternativas = new ArrayList<>();
+        for (HorarioDisponivel horario : horarios) {
+            if (!horario.equals(horarioConflitante)) alternativas.add(horario);
+        }
+        return alternativas;
+    }
+
+    public static boolean especialidadeValida(String esp) {
+        return esp.equals("clinica geral") || esp.equals("fisioterapia")
+                || esp.equals("psicologia") || esp.equals("nutricao");
+    }
+
+    // R4: sobrescrita de exibirResumo (abstract em Pessoa)
+    @Override
+    public String exibirResumo() {
+        return super.exibirResumo() + " | Espec: " + especialidade
+                + " | Reg: " + registroProfissional
+                + " | Valor: R$" + valorConsulta
+                + " | Horários: " + horarios.toString();
+    }
+
+    public abstract void registrarEspecifico(Atendimento atendimento);
+
+    // R2: método protected - acessível apenas por subclasses
+    protected boolean validarRegistro(String registro) {
+        if (registro == null || registro.isEmpty()) {
+            System.out.println("Erro: Registro profissional inválido");
+            return false;
+        }
+        return true;
+    }
+}
+
+// R3: hierarquia 3 níveis - Pessoa → Profissional → Fisioterapeuta
+class Fisioterapeuta extends Profissional {
+
+    public int totalSessoesPrevistas;
+
+    public Fisioterapeuta(String nome, String registroProfissional, double valorConsulta, int sessoes) {
+        super(nome, "fisioterapia", registroProfissional, valorConsulta);
+        this.totalSessoesPrevistas = sessoes;
+    }
+
+    // R4: sobrescrita de exibirResumo
+    @Override
+    public String exibirResumo() {
+        return super.exibirResumo() + " | Sessões Previstas: " + totalSessoesPrevistas;
+    }
+
+    // R4: sobrescrita de registrarEspecifico
+    @Override
+    public void registrarEspecifico(Atendimento atendimento) {
+        if (atendimento != null) {
+            String obs = atendimento.getObservacoes();
+            if (obs == null || obs.isEmpty()) {
+                atendimento.setObservacoes("[Fisioterapia]");
+            } else {
+                atendimento.setObservacoes(obs + " [Fisioterapia]");
             }
         }
-        return false;
+    }
+}
+
+class Psicologo extends Profissional {
+
+    public String abordagem;
+
+    public Psicologo(String nome, String registroProfissional, double valorConsulta, String abordagem) {
+        super(nome, "psicologia", registroProfissional, valorConsulta);
+        this.abordagem = abordagem;
     }
 
-    // valida as especialidades aceitas pela clinica
-    public static boolean especialidadeValida(String esp) {
-        if (esp.equals("clinica geral")) return true;
-        if (esp.equals("fisioterapia")) return true;
-        if (esp.equals("psicologia")) return true;
-        if (esp.equals("nutricao")) return true;
-        return false;
-    }
-
+    @Override
     public String exibirResumo() {
-        String dias = "";
-        for (int i = 0; i < totalDias; i++) {
-            if (i > 0) dias = dias + ", ";
-            dias = dias + diasDisponiveis[i];
+        return super.exibirResumo() + " | Abordagem: " + abordagem;
+    }
+
+    @Override
+    public void registrarEspecifico(Atendimento atendimento) {
+        if (atendimento != null) {
+            String info = "[Psicologia - " + this.abordagem + "]";
+            String obs = atendimento.getObservacoes();
+            if (obs == null || obs.isEmpty()) {
+                atendimento.setObservacoes(info);
+            } else {
+                atendimento.setObservacoes(obs + " " + info);
+            }
         }
-        return "Nome: " + nome + " | Espec: " + especialidade + " | Reg: " + registroProfissional
-                + " | Valor: R$" + valorConsulta + " | Dias: " + dias;
     }
 }
