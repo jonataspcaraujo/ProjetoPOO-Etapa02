@@ -1,3 +1,4 @@
+package colecoes;
 public class Pagamento {
     public int indiceConsulta;
     public double valorFinal;

@@ -1,3 +1,5 @@
+package colecoes;
+
 public class Consulta {
     public String cpfPaciente;
     public String nomeProfissional;

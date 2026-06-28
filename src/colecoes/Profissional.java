@@ -1,3 +1,4 @@
+package colecoes;
 public class Profissional {
     public String nome;
     public String especialidade;
@@ -80,5 +81,20 @@ public class Profissional {
         }
         return "Nome: " + nome + " | Espec: " + especialidade + " | Reg: " + registroProfissional
                 + " | Valor: R$" + valorConsulta + " | Dias: " + dias;
+    }
+
+    public double getValorConsulta() {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'getValorConsulta'");
+    }
+
+    public String getNome() {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'getNome'");
+    }
+
+    public Object getEspecialidade() {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'getEspecialidade'");
     }
 }

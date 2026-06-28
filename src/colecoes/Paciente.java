@@ -1,3 +1,4 @@
+package colecoes;
 public class Paciente {
     public String nome;
     public String cpf;
@@ -34,6 +35,16 @@ public class Paciente {
         this.ativo = true;
     }
 
+    public String getCpf(){
+    return cpf;
+
+    }
+
+    public boolean isAtivo(){
+    return ativo;
+
+    }
+
     // atualiza so idade e telefone
     public void complementar(int idade, String telefone) {
         this.idade = idade;
@@ -60,4 +71,11 @@ public class Paciente {
                 + " | Tel: " + telefone + " | Convenio: " + convenioNome
                 + " | Ativo: " + status;
     }
+
+    public Object getConvenioNome() {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'getConvenioNome'");
+    }
 }
+
+    

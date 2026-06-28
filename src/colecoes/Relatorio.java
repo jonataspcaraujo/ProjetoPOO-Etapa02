@@ -1,3 +1,4 @@
+package colecoes;
 public class Relatorio {
 
     // mostra todas as consultas
