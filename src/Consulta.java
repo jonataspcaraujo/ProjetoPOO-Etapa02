@@ -1,11 +1,11 @@
-public class Consulta {
+public class Consulta implements Agendavel, Exportavel {
     public String cpfPaciente;
     public String nomeProfissional;
     public String data;
     public String horario;
     public String tipo;
     public String status;
-
+    
     // sem tipo - assume inicial
     public Consulta(String cpfPaciente, String nomeProfissional, String data, String horario) {
         this.cpfPaciente = cpfPaciente;
@@ -36,9 +36,22 @@ public class Consulta {
         this.status = status;
     }
 
+    public void agendar(String data, String horario) {
+        this.data = data;
+        this.horario = horario;
+        this.status = "agendada";
+    }
+
+    public void remarcar(String novaData, String novoHorario) {
+        this.data = novaData;
+        this.horario = novoHorario;
+        this.status = "remarcada";
+    }
+
     public void cancelar() {
         this.status = "cancelada";
     }
+
 
     // cancelar com motivo - retorna a msg formatada
     public String cancelar(String motivo) {
@@ -46,17 +59,19 @@ public class Consulta {
         return "Consulta cancelada. Motivo: " + motivo;
     }
 
-    public void remarcar() {
-        this.status = "remarcada";
-    }
-
     public void realizar() {
         this.status = "realizada";
     }
 
-    public String exibirResumo() {
+
+    public String exportarResumo() {
         return "Paciente(CPF): " + cpfPaciente + " | Prof: " + nomeProfissional
                 + " | Data: " + data + " | Hora: " + horario
                 + " | Tipo: " + tipo + " | Status: " + status;
+    }
+
+    // (mantive pra não quebrar seu Main agora)
+    public String exibirResumo() {
+        return exportarResumo();
     }
 }

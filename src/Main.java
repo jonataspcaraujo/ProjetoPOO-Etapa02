@@ -36,14 +36,29 @@ public class Main {
             opcao = Integer.parseInt(sc.nextLine());
 
             switch (opcao) {
-                case 1: menuPacientes(); break;
-                case 2: menuProfissionais(); break;
-                case 3: menuConsultas(); break;
-                case 4: menuAtendimentos(); break;
-                case 5: menuPagamentos(); break;
-                case 6: menuRelatorios(); break;
-                case 0: break;
-                default: System.out.println("Opcao invalida!"); break;
+                case 1:
+                    menuPacientes();
+                    break;
+                case 2:
+                    menuProfissionais();
+                    break;
+                case 3:
+                    menuConsultas();
+                    break;
+                case 4:
+                    menuAtendimentos();
+                    break;
+                case 5:
+                    menuPagamentos();
+                    break;
+                case 6:
+                    menuRelatorios();
+                    break;
+                case 0:
+                    break;
+                default:
+                    System.out.println("Opcao invalida!");
+                    break;
             }
         }
         System.out.println("Sistema encerrado.");
@@ -65,13 +80,26 @@ public class Main {
             op = Integer.parseInt(sc.nextLine());
 
             switch (op) {
-                case 1: cadastrarPaciente(); break;
-                case 2: complementarPaciente(); break;
-                case 3: buscarPaciente(); break;
-                case 4: listarPacientes(); break;
-                case 5: desativarPaciente(); break;
-                case 0: break;
-                default: System.out.println("Opcao invalida!"); break;
+                case 1:
+                    cadastrarPaciente();
+                    break;
+                case 2:
+                    complementarPaciente();
+                    break;
+                case 3:
+                    buscarPaciente();
+                    break;
+                case 4:
+                    listarPacientes();
+                    break;
+                case 5:
+                    desativarPaciente();
+                    break;
+                case 0:
+                    break;
+                default:
+                    System.out.println("Opcao invalida!");
+                    break;
             }
         }
     }
@@ -174,7 +202,8 @@ public class Main {
 
     public static int buscarIndicePaciente(String cpf) {
         for (int i = 0; i < totalPacientes; i++) {
-            if (pacientes[i].cpf.equals(cpf)) return i;
+            if (pacientes[i].getCpf().equals(cpf))
+                return i;
         }
         return -1;
     }
@@ -194,12 +223,23 @@ public class Main {
             op = Integer.parseInt(sc.nextLine());
 
             switch (op) {
-                case 1: cadastrarProfissional(); break;
-                case 2: atualizarProfissional(); break;
-                case 3: listarProfissionais(); break;
-                case 4: filtrarProfissionais(); break;
-                case 0: break;
-                default: System.out.println("Opcao invalida!"); break;
+                case 1:
+                    cadastrarProfissional();
+                    break;
+                case 2:
+                    atualizarProfissional();
+                    break;
+                case 3:
+                    listarProfissionais();
+                    break;
+                case 4:
+                    filtrarProfissionais();
+                    break;
+                case 0:
+                    break;
+                default:
+                    System.out.println("Opcao invalida!");
+                    break;
             }
         }
     }
@@ -235,7 +275,7 @@ public class Main {
             int qtd = Integer.parseInt(sc.nextLine());
             String[] dias = new String[7];
             for (int i = 0; i < qtd; i++) {
-                System.out.print("Dia " + (i+1) + ": ");
+                System.out.print("Dia " + (i + 1) + ": ");
                 dias[i] = sc.nextLine();
             }
             profissionais[totalProfissionais] = new Profissional(nome, esp, reg, valor, dias, qtd);
@@ -268,7 +308,7 @@ public class Main {
             int qtd = Integer.parseInt(sc.nextLine());
             String[] dias = new String[7];
             for (int i = 0; i < qtd; i++) {
-                System.out.print("Dia " + (i+1) + ": ");
+                System.out.print("Dia " + (i + 1) + ": ");
                 dias[i] = sc.nextLine();
             }
             profissionais[idx].atualizar(reg, valor, dias, qtd);
@@ -296,12 +336,14 @@ public class Main {
                 achou = true;
             }
         }
-        if (!achou) System.out.println("Nenhum profissional com essa especialidade.");
+        if (!achou)
+            System.out.println("Nenhum profissional com essa especialidade.");
     }
 
     public static int buscarIndiceProfissional(String nome) {
         for (int i = 0; i < totalProfissionais; i++) {
-            if (profissionais[i].nome.equals(nome)) return i;
+            if (profissionais[i].getNome().equals(nome))
+                return i;
         }
         return -1;
     }
@@ -323,14 +365,29 @@ public class Main {
             op = Integer.parseInt(sc.nextLine());
 
             switch (op) {
-                case 1: agendarComProfissional(); break;
-                case 2: agendarPorEspecialidade(); break;
-                case 3: cancelarConsulta(); break;
-                case 4: remarcarConsulta(); break;
-                case 5: listarConsultas(); break;
-                case 6: buscarConsultasPorPaciente(); break;
-                case 0: break;
-                default: System.out.println("Opcao invalida!"); break;
+                case 1:
+                    agendarComProfissional();
+                    break;
+                case 2:
+                    agendarPorEspecialidade();
+                    break;
+                case 3:
+                    cancelarConsulta();
+                    break;
+                case 4:
+                    remarcarConsulta();
+                    break;
+                case 5:
+                    listarConsultas();
+                    break;
+                case 6:
+                    buscarConsultasPorPaciente();
+                    break;
+                case 0:
+                    break;
+                default:
+                    System.out.println("Opcao invalida!");
+                    break;
             }
         }
     }
@@ -590,7 +647,8 @@ public class Main {
                 achou = true;
             }
         }
-        if (!achou) System.out.println("Nenhuma consulta encontrada.");
+        if (!achou)
+            System.out.println("Nenhuma consulta encontrada.");
     }
 
     // verifica se ja tem consulta nesse horario com esse profissional
@@ -639,12 +697,13 @@ public class Main {
         int j = ano / 100;
 
         // formula de zeller
-        int resultado = (dia + (13 * (mes + 1)) / 5 + k + k/4 + j/4 - 2*j) % 7;
-        if (resultado < 0) resultado = resultado + 7;
+        int resultado = (dia + (13 * (mes + 1)) / 5 + k + k / 4 + j / 4 - 2 * j) % 7;
+        if (resultado < 0)
+            resultado = resultado + 7;
 
         // 0=sabado, 1=domingo, 2=segunda...
-        String[] nomes = {"sabado", "domingo", "segunda", "terca", "quarta", "quinta", "sexta"};
-        //System.out.println("DEBUG dia semana: " + nomes[resultado]); // pra testar
+        String[] nomes = { "sabado", "domingo", "segunda", "terca", "quarta", "quinta", "sexta" };
+        // System.out.println("DEBUG dia semana: " + nomes[resultado]); // pra testar
         return nomes[resultado];
     }
 
@@ -659,7 +718,8 @@ public class Main {
             System.out.print("Opcao: ");
             op = Integer.parseInt(sc.nextLine());
 
-            if (op == 1) registrarAtendimento();
+            if (op == 1)
+                registrarAtendimento();
         }
     }
 
@@ -713,9 +773,10 @@ public class Main {
             } else {
                 System.out.print("Quantos? ");
                 qtdProcs = Integer.parseInt(sc.nextLine());
-                if (qtdProcs > 10) qtdProcs = 10;
+                if (qtdProcs > 10)
+                    qtdProcs = 10;
                 for (int i = 0; i < qtdProcs; i++) {
-                    System.out.print("Proc " + (i+1) + ": ");
+                    System.out.print("Proc " + (i + 1) + ": ");
                     procs[i] = sc.nextLine();
                 }
             }
@@ -743,11 +804,20 @@ public class Main {
             op = Integer.parseInt(sc.nextLine());
 
             switch (op) {
-                case 1: pagamentoDireto(); break;
-                case 2: pagamentoAutomatico(); break;
-                case 3: listarPagamentos(); break;
-                case 0: break;
-                default: System.out.println("Opcao invalida!"); break;
+                case 1:
+                    pagamentoDireto();
+                    break;
+                case 2:
+                    pagamentoAutomatico();
+                    break;
+                case 3:
+                    listarPagamentos();
+                    break;
+                case 0:
+                    break;
+                default:
+                    System.out.println("Opcao invalida!");
+                    break;
             }
         }
     }
@@ -769,16 +839,25 @@ public class Main {
         if (tipoPag.equals("cartao")) {
             System.out.print("Parcelas (1 a 3): ");
             int parc = Integer.parseInt(sc.nextLine());
-            if (parc < 1) parc = 1;
-            if (parc > 3) parc = 3;
-            pagamentos[totalPagamentos] = new Pagamento(idxConsulta, valor, tipoPag, parc);
+            if (parc < 1)
+                parc = 1;
+            if (parc > 3)
+                parc = 3;
+
+            pagamentos[totalPagamentos] = new PagamentoCartao(idxConsulta, valor, tipoPag, parc);
+
             if (parc > 1) {
                 double vlrParc = Math.round((valor / parc) * 100.0) / 100.0;
                 System.out.println("Pagamento em " + parc + "x de R$" + vlrParc);
             }
+
+        } else if (tipoPag.equals("convenio")) {
+            pagamentos[totalPagamentos] = new PagamentoConvenio(idxConsulta, valor, 0.40);
+
         } else {
-            pagamentos[totalPagamentos] = new Pagamento(idxConsulta, valor, tipoPag);
+            pagamentos[totalPagamentos] = new PagamentoDinheiro(idxConsulta, valor);
         }
+
         totalPagamentos++;
         System.out.println("Pagamento registrado!");
     }
@@ -792,12 +871,10 @@ public class Main {
             return;
         }
 
-        // obtem valor do profissional
         String nomeProf = consultas[idxConsulta].nomeProfissional;
         int idxProf = buscarIndiceProfissional(nomeProf);
         double valorBase = profissionais[idxProf].valorConsulta;
 
-        // verifica convenio e tipo
         String cpfPac = consultas[idxConsulta].cpfPaciente;
         int idxPac = buscarIndicePaciente(cpfPac);
 
@@ -805,8 +882,10 @@ public class Main {
         boolean ehRetorno = consultas[idxConsulta].tipo.equals("retorno");
 
         double desconto = 0;
-        if (ehRetorno) desconto = desconto + 20;
-        if (temConvenio) desconto = desconto + 40;
+        if (ehRetorno)
+            desconto = desconto + 20;
+        if (temConvenio)
+            desconto = desconto + 40;
 
         System.out.print("Tem multa pendente? (1-Nao / 2-Sim): ");
         int temMulta = Integer.parseInt(sc.nextLine());
@@ -823,10 +902,10 @@ public class Main {
             valorFinal = Pagamento.calcularValor(valorBase, desconto, valorMulta);
         }
 
-        // mostra detalhes
         System.out.println("Valor base: R$" + valorBase);
         System.out.println("Desconto: " + desconto + "%");
-        if (valorMulta > 0) System.out.println("Multa: R$" + valorMulta);
+        if (valorMulta > 0)
+            System.out.println("Multa: R$" + valorMulta);
         double vlrFinalArredondado = Math.round(valorFinal * 100.0) / 100.0;
         System.out.println("Valor final: R$" + vlrFinalArredondado);
 
@@ -836,26 +915,25 @@ public class Main {
         if (tipoPag.equals("cartao")) {
             System.out.print("Parcelas (1 a 3): ");
             int parc = Integer.parseInt(sc.nextLine());
-            if (parc < 1) parc = 1;
-            if (parc > 3) parc = 3;
-            pagamentos[totalPagamentos] = new Pagamento(idxConsulta, valorFinal, tipoPag, parc);
+            if (parc < 1)
+                parc = 1;
+            if (parc > 3)
+                parc = 3;
+
+            pagamentos[totalPagamentos] = new PagamentoCartao(idxConsulta, valorFinal, tipoPag, parc);
+
             double vlrParc = Math.round((valorFinal / parc) * 100.0) / 100.0;
             System.out.println("Pagamento em " + parc + "x de R$" + vlrParc);
+
+        } else if (tipoPag.equals("convenio")) {
+            pagamentos[totalPagamentos] = new PagamentoConvenio(idxConsulta, valorFinal, tipoPag);
+
         } else {
-            pagamentos[totalPagamentos] = new Pagamento(idxConsulta, valorFinal, tipoPag);
+            pagamentos[totalPagamentos] = new PagamentoDinheiro(idxConsulta, valorFinal, tipoPag);
         }
+
         totalPagamentos++;
         System.out.println("Pagamento registrado!");
-    }
-
-    public static void listarPagamentos() {
-        if (totalPagamentos == 0) {
-            System.out.println("Nenhum pagamento registrado.");
-            return;
-        }
-        for (int i = 0; i < totalPagamentos; i++) {
-            System.out.println(pagamentos[i].exibirResumo());
-        }
     }
 
     // ---- RELATORIOS ----
@@ -889,10 +967,14 @@ public class Main {
                     Relatorio.gerarRelatorio(consultas, totalConsultas, atendimentos, totalAtendimentos, ini, fim);
                     break;
                 case 4:
-                    Relatorio.gerarResumoFinanceiro(consultas, totalConsultas, pagamentos, totalPagamentos, multas, totalMultas);
+                    Relatorio.gerarResumoFinanceiro(consultas, totalConsultas, pagamentos, totalPagamentos, multas,
+                            totalMultas);
                     break;
-                case 0: break;
-                default: System.out.println("Opcao invalida!"); break;
+                case 0:
+                    break;
+                default:
+                    System.out.println("Opcao invalida!");
+                    break;
             }
         }
     }
