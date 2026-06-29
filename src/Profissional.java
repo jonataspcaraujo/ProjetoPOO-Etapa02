@@ -1,84 +1,119 @@
-public class Profissional {
-    public String nome;
-    public String especialidade;
-    public String registroProfissional;
-    public double valorConsulta;
-    public String[] diasDisponiveis;
-    public int totalDias;
+import java.util.HashSet;
+import java.util.Set;
 
-    // so nome e especialidade
+public abstract class Profissional extends Pessoa {
+    private String especialidade;
+    private String registroProfissional;
+    private double valorConsulta;
+    private Set<String> diasDisponiveis; // antes era String[] diasDisponiveis + int totalDias
+
+    // construtor simples
     public Profissional(String nome, String especialidade) {
-        this.nome = nome;
+        super(nome, "", "", "");
         this.especialidade = especialidade;
         this.registroProfissional = "";
         this.valorConsulta = 0;
-        this.diasDisponiveis = new String[7];
-        this.totalDias = 0;
+        this.diasDisponiveis = new HashSet<>();
     }
 
+    // construtor intermediario
     public Profissional(String nome, String especialidade, String registroProfissional, double valorConsulta) {
-        this.nome = nome;
+        super(nome, "", "", "");
         this.especialidade = especialidade;
-        this.registroProfissional = registroProfissional;
-        this.valorConsulta = valorConsulta;
-        this.diasDisponiveis = new String[7];
-        this.totalDias = 0;
+        setRegistroProfissional(registroProfissional);
+        setValorConsulta(valorConsulta);
+        this.diasDisponiveis = new HashSet<>();
     }
 
-    // construtor completo com dias
+    // construtor completo
     public Profissional(String nome, String especialidade, String registroProfissional,
                         double valorConsulta, String[] dias, int totalDias) {
-        this.nome = nome;
+        super(nome, "", "", "");
         this.especialidade = especialidade;
-        this.registroProfissional = registroProfissional;
-        this.valorConsulta = valorConsulta;
-        this.diasDisponiveis = new String[7];
-        this.totalDias = totalDias;
+        setRegistroProfissional(registroProfissional);
+        setValorConsulta(valorConsulta);
+        this.diasDisponiveis = new HashSet<>();
         for (int i = 0; i < totalDias; i++) {
-            this.diasDisponiveis[i] = dias[i];
+            this.diasDisponiveis.add(dias[i]);
         }
+    }
+
+    public String getEspecialidade() {
+        return especialidade;
+    }
+
+    public void setEspecialidade(String especialidade) {
+        this.especialidade = especialidade;
+    }
+
+    public String getRegistroProfissional() {
+        return registroProfissional;
+    }
+
+    public void setRegistroProfissional(String registroProfissional) {
+        if (registroProfissional == null || registroProfissional.trim().isEmpty()) {
+            System.out.println("O registro profissional nao pode ser vazio!");
+        }
+        this.registroProfissional = registroProfissional;
+    }
+
+    public double getValorConsulta() {
+        return valorConsulta;
+    }
+
+    public void setValorConsulta(double valorConsulta) {
+        if (valorConsulta < 0) {
+            System.out.println("Valor invalido. Nao alterado.");
+            return;
+        }
+        this.valorConsulta = valorConsulta;
+    }
+
+    public Set<String> getDiasDisponiveis() {
+        return diasDisponiveis;
+    }
+
+    public void setDiasDisponiveis(Set<String> diasDisponiveis) {
+        this.diasDisponiveis = diasDisponiveis;
     }
 
     public void atualizar(String registro, double valor) {
-        this.registroProfissional = registro;
-        this.valorConsulta = valor;
+        setRegistroProfissional(registro);
+        setValorConsulta(valor);
     }
 
+    // agora recebe array mas adiciona no Set internamente
     public void atualizar(String registro, double valor, String[] dias, int totalDias) {
-        this.registroProfissional = registro;
-        this.valorConsulta = valor;
-        this.totalDias = totalDias;
+        setRegistroProfissional(registro);
+        setValorConsulta(valor);
+        diasDisponiveis.clear();
         for (int i = 0; i < totalDias; i++) {
-            this.diasDisponiveis[i] = dias[i];
+            diasDisponiveis.add(dias[i]);
         }
     }
 
-    // verifica se o profissional atende naquele dia
+    // com Set, contains() faz isso em O(1) - sem precisar de loop
     public boolean atendeNoDia(String dia) {
-        for (int i = 0; i < totalDias; i++) {
-            if (diasDisponiveis[i].equals(dia)) {
-                return true;
-            }
-        }
-        return false;
+        return diasDisponiveis.contains(dia);
     }
 
-    // valida as especialidades aceitas pela clinica
     public static boolean especialidadeValida(String esp) {
-        if (esp.equals("clinica geral")) return true;
-        if (esp.equals("fisioterapia")) return true;
-        if (esp.equals("psicologia")) return true;
-        if (esp.equals("nutricao")) return true;
+        if (esp.equalsIgnoreCase("clinica geral")) return true;
+        if (esp.equalsIgnoreCase("fisioterapia")) return true;
+        if (esp.equalsIgnoreCase("psicologia")) return true;
+        if (esp.equalsIgnoreCase("nutricao")) return true;
         return false;
     }
 
-    public String exibirResumo() {
-        String dias = "";
-        for (int i = 0; i < totalDias; i++) {
-            if (i > 0) dias = dias + ", ";
-            dias = dias + diasDisponiveis[i];
-        }
-        return "Nome: " + nome + " | Espec: " + especialidade + " | Reg: " + registroProfissional
+    protected String montarResumoBase() {
+        String dias = String.join(", ", diasDisponiveis);
+        return "Nome: " + getNome() + " | Espec: " + especialidade
+                + " | Reg: " + registroProfissional
                 + " | Valor: R$" + valorConsulta + " | Dias: " + dias;
     }
+
+    public abstract void registrarEspecifico(Atendimento atendimento);
+
+    @Override
+    public abstract void exibirResumo();
 }
