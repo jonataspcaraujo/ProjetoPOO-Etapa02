@@ -1,0 +1,79 @@
+# =========================================================================
+# Java Core Compiled & Runtime Files
+# =========================================================================
+*.class
+*.log
+*.ctxt
+*.jar
+*.war
+*.ear
+*.zip
+*.tar.gz
+*.rar
+hs_err_pid*
+replay_pid*
+
+# =========================================================================
+# Build Tools (Maven & Gradle)
+# =========================================================================
+# Maven
+target/
+pom.xml.tag
+pom.xml.releaseBackup
+pom.xml.versionsBackup
+pom.xml.next
+release.properties
+dependency-reduced-pom.xml
+buildNumber.properties
+.mvn/timing.properties
+# Avoid ignoring Maven Wrapper binaries if you use them
+!.mvn/wrapper/maven-wrapper.jar
+
+# Gradle
+.gradle/
+build/
+!**/src/**/build/
+gradle-app.setting
+.gradletasknamecache
+# Avoid ignoring Gradle Wrapper binaries if you use them
+!gradle-wrapper.jar
+!gradle-wrapper.properties
+
+# =========================================================================
+# Alternative IDEs (Optional configuration safety)
+# =========================================================================
+# VS Code
+.vscode/
+
+# Eclipse
+.metadata/
+bin/
+tmp/
+.tmp/
+.classpath
+.project
+.settings/
+*.launch
+*.factorypath
+
+# NetBeans
+**/nbproject/private/
+**/nbproject/Makefile-*.mk
+**/nbproject/Package-*.bash
+nbbuild/
+dist/
+nbdist/
+.nb-gradle/
+
+# =========================================================================
+# Operating System Files
+# =========================================================================
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+
+# Windows
+Thumbs.db
+Ehthumbs.db
+Desktop.ini

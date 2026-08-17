@@ -1,58 +1,55 @@
-public class Pagamento {
-    public int indiceConsulta;
-    public double valorFinal;
-    public String tipoPagamento;
-    public int parcelas;
+public abstract class Pagamento {
+    private int indiceConsulta;
+    private double valorBase;
+    protected double valorTotal;
+    private String tipoPagamento;
+    private String status;
 
-    public Pagamento(int indiceConsulta, double valorFinal, String tipoPagamento) {
+    public Pagamento(int indiceConsulta, double valorBase, String tipoPagamento) {
         this.indiceConsulta = indiceConsulta;
-        this.valorFinal = valorFinal;
+        this.valorBase = valorBase;
         this.tipoPagamento = tipoPagamento;
-        this.parcelas = 1;
+        this.status = "PAGO";
     }
 
-    // com parcelas (so pra cartao)
-    public Pagamento(int indiceConsulta, double valorFinal, String tipoPagamento, int parcelas) {
-        this.indiceConsulta = indiceConsulta;
-        this.valorFinal = valorFinal;
-        this.tipoPagamento = tipoPagamento;
-        this.parcelas = parcelas;
+    //getters e setters
+    public int getIndiceConsulta() { return this.indiceConsulta; }
+    public void setIndiceConsulta(int indiceConsulta) { this.indiceConsulta = indiceConsulta; }
+
+    public double getValorBase() { return this.valorBase; }
+    public void setValorBase(double valorBase) { this.valorBase = valorBase; }
+
+    public double getValorTotal(){ return this.valorTotal; }
+    public void setValorTotal(double valorTotal) { this.valorTotal = valorTotal; }
+
+    public String getTipoPagamento() { return this.tipoPagamento; }
+    public void setTipoPagamento(String tipoPagamento) { this.tipoPagamento = tipoPagamento; }
+
+    public String getStatus() { return this.status; }
+    public void setStatus(String status) { this.status = status; }
+
+    //método abstrato para o valor final
+    public abstract double calcularValorFinal();
+
+    //método concreto para exibir resumo
+    public String exibirResumo() {
+        return "Consulta #" + this.indiceConsulta +
+                " | Status: " + this.status;
     }
 
-    // sem desconto nenhum
     public static double calcularValor(double valorBase) {
         return valorBase;
     }
 
-    // com desconto em percentual
     public static double calcularValor(double valorBase, double percentualDesconto) {
         double desconto = valorBase * percentualDesconto / 100;
         double valor = valorBase - desconto;
-        if (valor < 0) {
-            valor = 0;
-        }
-        return valor;
+        return valor < 0 ? 0 : valor;
     }
 
-    // com desconto e multa somada
     public static double calcularValor(double valorBase, double percentualDesconto, double multa) {
         double desconto = valorBase * percentualDesconto / 100;
         double valor = valorBase - desconto + multa;
-        if (valor < 0) {
-            valor = 0;
-        }
-        return valor;
-    }
-
-    public String exibirResumo() {
-        // arredonda pra 2 casas
-        double valorArredondado = Math.round(valorFinal * 100.0) / 100.0;
-        String resumo = "Consulta #" + indiceConsulta + " | Valor: R$" + valorArredondado
-                + " | Tipo: " + tipoPagamento + " | Parcelas: " + parcelas;
-        if (parcelas > 1) {
-            double valorParcela = Math.round((valorFinal / parcelas) * 100.0) / 100.0;
-            resumo = resumo + " (R$" + valorParcela + " cada)";
-        }
-        return resumo;
+        return valor < 0 ? 0 : valor;
     }
 }
